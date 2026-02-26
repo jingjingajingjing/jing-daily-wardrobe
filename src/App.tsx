@@ -30,8 +30,7 @@ const App = () => {
         <h1>🌸 今天想穿啥，静静</h1>
         <p>北京当前天气：{temp}°C {weather}</p>
         <hr />
-        <p>为你推荐：</p>
-        <p>今天心情怎么样呀!</p>
+        <p>为你推荐 今日穿搭：</p>
         <p style={{ color: '#d4a373', fontWeight: 'bold' }}>{outfits[currentIndex]}</p>
         <button 
           onClick={() => setCurrentIndex((currentIndex + 1) % outfits.length)}
