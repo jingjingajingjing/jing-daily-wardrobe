@@ -14,8 +14,9 @@ const App = () => {
 
   useEffect(() => {
     // 自动获取天气
+    // 目前城市写死为 北京
     axios.get(`https://devapi.qweather.com/v7/weather/now?location=101010100&key=00d760eeb9774ac483b08c60c048ac17`)
-      .then(res => {
+      .then((res: any) => {
         if (res.data.code === '200') {
           setTemp(res.data.now.temp);
           setWeather(res.data.now.text);
