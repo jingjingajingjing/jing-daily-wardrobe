@@ -33,6 +33,7 @@ const App = () => {
         <p>为你推荐 今日穿搭：</p>
         <p>今天心情怎么样呀!</p>
         <p>静静你穿啥都好看</p>
+        <p>我觉得静静太厉害了!</p>
         <p style={{ color: '#d4a373', fontWeight: 'bold' }}>{outfits[currentIndex]}</p>
         <button 
           onClick={() => setCurrentIndex((currentIndex + 1) % outfits.length)}
