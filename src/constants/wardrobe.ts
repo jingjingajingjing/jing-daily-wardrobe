@@ -4,6 +4,10 @@ import camelColorCoat from '../assets/images/autumnCoat/camelColorCoat.jpg';
 import brownColorCoat from '../assets/images/autumnCoat/brownColorCoat.jpg';
 import pinkFlowerSkirt from '../assets/images/summerSkirt/pinkFlowerSkirt.jpg';
 import creamQiaoAnNaSkirt from '../assets/images/summerSkirt/creamQiaoAnNaSkirt.jpg';
+import camelWool from '../assets/images/allTrousers/camelWool.png';
+import whiteStrictBrushed from '../assets/images/allTrousers/whiteStrictBrushed.png';
+import camelBirkenstock from '../assets/images/allShoes/camelBirkenstock.png';
+import whiteSneaker from '../assets/images/allShoes/whiteSneaker.png';
 
 export interface Outfit {
   name: string;
@@ -16,7 +20,7 @@ export interface ClothingItem {
   id: string;
   name: string;
   imageUrl: string;
-  category: 'coat' | 'bottom' | 'shoes';
+  category: 'coat' | 'trousers' | 'skirt' | 'shoes';
 }
 
 export const ALL_OUTFITS: Outfit[] = [
@@ -33,12 +37,17 @@ export const CLOTHING_ITEMS: ClothingItem[] = [
   { id: 'coat-2', name: '白色皮草', imageUrl: whiteFur, category: 'coat' },
   { id: 'coat-3', name: '棕色羊绒大衣', imageUrl: brownColorCoat, category: 'coat' },
   { id: 'coat-4', name: '驼色羊绒大衣', imageUrl: camelColorCoat, category: 'coat' },
-  { id: 'bottom-1', name: '嫩粉色碎花长裙', imageUrl: pinkFlowerSkirt, category: 'bottom' },
-  { id: 'bottom-2', name: '米色乔安娜长裙', imageUrl: creamQiaoAnNaSkirt, category: 'bottom' },
+  { id: 'skirt-1', name: '嫩粉色碎花长裙', imageUrl: pinkFlowerSkirt, category: 'skirt' },
+  { id: 'skirt-2', name: '米色乔安娜长裙', imageUrl: creamQiaoAnNaSkirt, category: 'skirt' },
+  { id: 'trousers-1', name: '驼色羊毛裤', imageUrl: camelWool, category: 'trousers' },
+  { id: 'trousers-2', name: '白色直筒刷毛裤', imageUrl: whiteStrictBrushed, category: 'trousers' },
+  { id: 'shoes-1', name: '驼色勃肯鞋', imageUrl: camelBirkenstock, category: 'shoes' },
+  { id: 'shoes-2', name: '白色运动鞋', imageUrl: whiteSneaker, category: 'shoes' },
 ];
 
 export const CATEGORY_LABELS: Record<string, string> = {
   coat: '外套',
-  bottom: '下装',
+  trousers: '裤子',
+  skirt: '裙子',
   shoes: '鞋子',
 };

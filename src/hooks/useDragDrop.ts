@@ -48,6 +48,21 @@ export function useDragDrop() {
     });
   }, []);
 
+  // 移动端：点击/触摸选择物品，再次点击同一物品则取消选择
+  const handleSelectItem = useCallback((item: DraggedItem) => {
+    setDragging((prev) => (prev?.id === item.id ? null : item));
+  }, []);
+
+  // 移动端：点击/触摸搭配区槽位放入已选物品
+  const handleSlotTap = useCallback(
+    (category: string) => {
+      if (!dragging || dragging.category !== category) return;
+      setMatched((prev) => ({ ...prev, [category]: dragging }));
+      setDragging(null);
+    },
+    [dragging]
+  );
+
   return {
     matched,
     dragging,
@@ -55,6 +70,8 @@ export function useDragDrop() {
     handleDragEnd,
     handleDrop,
     handleDragOver,
+    handleSelectItem,
+    handleSlotTap,
     clearMatch,
   };
 }

@@ -26,6 +26,8 @@ const App = () => {
     handleDragEnd,
     handleDrop,
     handleDragOver,
+    handleSelectItem,
+    handleSlotTap,
     clearMatch,
   } = useDragDrop();
 
@@ -120,6 +122,7 @@ const App = () => {
             matched={matched}
             onDrop={handleDrop}
             onDragOver={handleDragOver}
+            onSlotTap={handleSlotTap}
             onClear={clearMatch}
             dragging={dragging}
           />
@@ -127,6 +130,7 @@ const App = () => {
             items={CLOTHING_ITEMS}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
+            onSelectItem={handleSelectItem}
             dragging={dragging}
           />
         </div>
