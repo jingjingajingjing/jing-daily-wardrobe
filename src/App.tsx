@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import greenThickCoat from './assets/images/winterCoat/greenThickCoat.jpg';
+import whiteFur from './assets/images/winterCoat/whiteFur.jpg';
 import camelColorCoat from './assets/images/autumnCoat/camelColorCoat.jpg';
-import pinkFlowerSkit from './assets/images/summerSkirt/pinkFlowerSkit.jpg';
+import brownColorCoat from './assets/images/autumnCoat/brownColorCoat.jpg';
+import pinkFlowerSkit from './assets/images/summerSkirt/pinkFlowerSkirt.jpg';
+import creamQiaoAnNaSkirt from './assets/images/summerSkirt/creamQiaoAnNaSkirt.jpg';
+import { genBlock } from './utils/bem';
+import './App.less';
+const { block } = genBlock('wardrobe');
 
-// 1. 定义衣服的类型接口
 interface Outfit {
   name: string;
   minTemp: number;
@@ -12,25 +17,42 @@ interface Outfit {
   imageUrl?: string;
 }
 
-// 2. 准备更丰富的衣橱数据
 const ALL_OUTFITS: Outfit[] = [
   {
-    name: '厚羽绒服 + 保暖内衣',
-    minTemp: -20,
-    maxTemp: 5,
+    name: '绿色无帽厚羽绒服',
+    minTemp: -15,
+    maxTemp: -5,
     imageUrl: greenThickCoat,
   },
   {
-    name: '羊绒大衣 + 针织衫',
-    minTemp: 6,
+    name: '白色无帽厚皮草',
+    minTemp: -15,
+    maxTemp: -5,
+    imageUrl: whiteFur,
+  },
+  {
+    name: '棕色羊绒大衣',
+    minTemp: -4,
+    maxTemp: 3,
+    imageUrl: brownColorCoat,
+  },
+  {
+    name: '驼色羊绒大衣',
+    minTemp: 4,
     maxTemp: 12,
     imageUrl: camelColorCoat,
   },
   {
-    name: '碎花吊带裙 + 遮阳帽',
-    minTemp: 26,
+    name: '嫩粉色碎花真丝长裙',
+    minTemp: 25,
     maxTemp: 35,
     imageUrl: pinkFlowerSkit,
+  },
+  {
+    name: '米色乔安娜长裙',
+    minTemp: 25,
+    maxTemp: 35,
+    imageUrl: creamQiaoAnNaSkirt,
   },
 ];
 
@@ -64,24 +86,8 @@ const App = () => {
   }, []);
 
   return (
-    <div
-      style={{
-        textAlign: 'center',
-        padding: '50px',
-        backgroundColor: '#f9f4f0',
-        minHeight: '100vh',
-      }}
-    >
-      <div
-        style={{
-          background: 'white',
-          padding: '30px',
-          borderRadius: '15px',
-          maxWidth: '400px',
-          margin: '0 auto',
-          boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-        }}
-      >
+    <div className={block()}>
+      <div className={block('card')}>
         <h1>🌸 今天想穿啥，静静</h1>
         <p>
           北京当前天气：{temp}°C {weather}
@@ -90,48 +96,19 @@ const App = () => {
         <p>为你推荐 今日穿搭：</p>
         <p>今天心情怎么样呀!</p>
         <p>静静你穿啥都好看</p>
-        <p style={{ color: '#d4a373', fontWeight: 'bold' }}>
-          {suggestedOutfits[currentIndex]?.name}
-        </p>
-        <div
-          style={{
-            width: '100%',
-            height: '360px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: '#f8f6f4',
-            borderRadius: '10px',
-            overflow: 'hidden',
-            marginBottom: '20px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-          }}
-        >
-          {/* 展示当前推荐衣服的图片：统一高度 + 完整展示全貌 */}
+        <p className={block('outfit-name')}>{suggestedOutfits[currentIndex]?.name}</p>
+        <div className={block('image-wrapper')}>
           <img
+            className={block('image')}
             src={suggestedOutfits[currentIndex]?.imageUrl}
             alt={suggestedOutfits[currentIndex]?.name}
-            style={{
-              maxWidth: '100%',
-              maxHeight: '100%',
-              objectFit: 'contain',
-              display: 'block',
-              borderRadius: '8px',
-            }}
           />
         </div>
         <button
+          className={block('switch-btn')}
           onClick={() =>
             setCurrentIndex((currentIndex + 1) % suggestedOutfits.length)
           }
-          style={{
-            padding: '10px 20px',
-            borderRadius: '20px',
-            background: '#d4a373',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer',
-          }}
         >
           换一套看看
         </button>

@@ -8,10 +8,11 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "prettier": "^3.4.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^5.1.4",
+    "less": "^4.5.1",
+    "prettier": "^3.4.2",
     "serve": "^14.2.4",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
