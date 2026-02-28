@@ -2,9 +2,31 @@
 
 .@{block-name} {
   text-align: center;
-  padding: 50px;
+  padding: 20px 16px 40px;
   background-color: #f9f4f0;
   min-height: 100vh;
+
+  &__tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    justify-content: center;
+  }
+
+  &__tab {
+    padding: 10px 24px;
+    border: none;
+    background: #e8e4df;
+    border-radius: 20px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #666;
+
+    &--active {
+      background: #d4a373;
+      color: white;
+    }
+  }
 
   &__card {
     background: white;
@@ -29,8 +51,9 @@
     background-color: #f8f6f4;
     border-radius: 10px;
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    touch-action: pan-y;
   }
 
   &__image {
@@ -41,6 +64,12 @@
     border-radius: 8px;
   }
 
+  &__swipe-hint {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 16px;
+  }
+
   &__switch-btn {
     padding: 10px 20px;
     border-radius: 20px;
@@ -48,5 +77,11 @@
     color: white;
     border: none;
     cursor: pointer;
+  }
+
+  &__match-wrap {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: left;
   }
 }

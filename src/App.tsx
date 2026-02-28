@@ -1,67 +1,45 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import greenThickCoat from './assets/images/winterCoat/greenThickCoat.jpg';
-import whiteFur from './assets/images/winterCoat/whiteFur.jpg';
-import camelColorCoat from './assets/images/autumnCoat/camelColorCoat.jpg';
-import brownColorCoat from './assets/images/autumnCoat/brownColorCoat.jpg';
-import pinkFlowerSkit from './assets/images/summerSkirt/pinkFlowerSkirt.jpg';
-import creamQiaoAnNaSkirt from './assets/images/summerSkirt/creamQiaoAnNaSkirt.jpg';
 import { genBlock } from './utils/bem';
+import { useSwipe } from './hooks/useSwipe';
+import { useDragDrop } from './hooks/useDragDrop';
+import { ALL_OUTFITS, CLOTHING_ITEMS } from './constants/wardrobe';
+import { MatchZone } from './components/MatchZone';
+import { ClothingGrid } from './components/ClothingGrid';
 import './App.less';
+
 const { block } = genBlock('wardrobe');
 
-interface Outfit {
-  name: string;
-  minTemp: number;
-  maxTemp: number;
-  imageUrl?: string;
-}
-
-const ALL_OUTFITS: Outfit[] = [
-  {
-    name: '绿色无帽厚羽绒服',
-    minTemp: -15,
-    maxTemp: -5,
-    imageUrl: greenThickCoat,
-  },
-  {
-    name: '白色无帽厚皮草',
-    minTemp: -15,
-    maxTemp: -5,
-    imageUrl: whiteFur,
-  },
-  {
-    name: '棕色羊绒大衣',
-    minTemp: -4,
-    maxTemp: 3,
-    imageUrl: brownColorCoat,
-  },
-  {
-    name: '驼色羊绒大衣',
-    minTemp: 4,
-    maxTemp: 12,
-    imageUrl: camelColorCoat,
-  },
-  {
-    name: '嫩粉色碎花真丝长裙',
-    minTemp: 25,
-    maxTemp: 35,
-    imageUrl: pinkFlowerSkit,
-  },
-  {
-    name: '米色乔安娜长裙',
-    minTemp: 25,
-    maxTemp: 35,
-    imageUrl: creamQiaoAnNaSkirt,
-  },
-];
+type TabType = 'recommend' | 'match';
 
 const App = () => {
   const [temp, setTemp] = useState<number>(5);
   const [weather, setWeather] = useState('阴');
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [suggestedOutfits, setSuggestedOutfits] =
-    useState<Outfit[]>(ALL_OUTFITS);
+  const [suggestedOutfits, setSuggestedOutfits] = useState(ALL_OUTFITS);
+  const [activeTab, setActiveTab] = useState<TabType>('recommend');
+
+  const {
+    matched,
+    dragging,
+    handleDragStart,
+    handleDragEnd,
+    handleDrop,
+    handleDragOver,
+    clearMatch,
+  } = useDragDrop();
+
+  const safeIndex =
+    suggestedOutfits.length > 0 ? currentIndex % suggestedOutfits.length : 0;
+  const goPrev = () =>
+    setCurrentIndex((i) => (i - 1 + suggestedOutfits.length) % suggestedOutfits.length);
+  const goNext = () =>
+    setCurrentIndex((i) => (i + 1) % suggestedOutfits.length);
+
+  const swipe = useSwipe({
+    onSwipeLeft: goNext,
+    onSwipeRight: goPrev,
+  });
 
   useEffect(() => {
     axios
@@ -87,32 +65,72 @@ const App = () => {
 
   return (
     <div className={block()}>
-      <div className={block('card')}>
-        <h1>🌸 今天想穿啥，静静</h1>
-        <p>
-          北京当前天气：{temp}°C {weather}
-        </p>
-        <hr />
-        <p>为你推荐 今日穿搭：</p>
-        <p>今天心情怎么样呀!</p>
-        <p>静静你穿啥都好看</p>
-        <p className={block('outfit-name')}>{suggestedOutfits[currentIndex]?.name}</p>
-        <div className={block('image-wrapper')}>
-          <img
-            className={block('image')}
-            src={suggestedOutfits[currentIndex]?.imageUrl}
-            alt={suggestedOutfits[currentIndex]?.name}
-          />
-        </div>
+      <div className={block('tabs')}>
         <button
-          className={block('switch-btn')}
-          onClick={() =>
-            setCurrentIndex((currentIndex + 1) % suggestedOutfits.length)
-          }
+          className={`${block('tab')} ${activeTab === 'recommend' ? block('tab', 'active') : ''}`}
+          onClick={() => setActiveTab('recommend')}
         >
-          换一套看看
+          智能推荐
+        </button>
+        <button
+          className={`${block('tab')} ${activeTab === 'match' ? block('tab', 'active') : ''}`}
+          onClick={() => setActiveTab('match')}
+        >
+          自由搭配
         </button>
       </div>
+
+      {activeTab === 'recommend' && (
+        <div className={block('card')}>
+          <h1>🌸 今天想穿啥，静静</h1>
+          <p>
+            北京当前天气：{temp}°C {weather}
+          </p>
+          <hr />
+          <p>为你推荐 今日穿搭：</p>
+          <p>今天心情怎么样呀!</p>
+          <p>静静你穿啥都好看</p>
+          <p className={block('outfit-name')}>
+            {suggestedOutfits[safeIndex]?.name}
+          </p>
+          <div
+            className={block('image-wrapper')}
+            onTouchStart={swipe.handleTouchStart}
+            onTouchEnd={swipe.handleTouchEnd}
+          >
+            <img
+              className={block('image')}
+              src={suggestedOutfits[safeIndex]?.imageUrl}
+              alt={suggestedOutfits[safeIndex]?.name}
+            />
+          </div>
+          <p className={block('swipe-hint')}>👆 左右滑动可切换</p>
+          <button
+            className={block('switch-btn')}
+            onClick={goNext}
+          >
+            换一套看看
+          </button>
+        </div>
+      )}
+
+      {activeTab === 'match' && (
+        <div className={block('match-wrap')}>
+          <MatchZone
+            matched={matched}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+            onClear={clearMatch}
+            dragging={dragging}
+          />
+          <ClothingGrid
+            items={CLOTHING_ITEMS}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            dragging={dragging}
+          />
+        </div>
+      )}
     </div>
   );
 };
