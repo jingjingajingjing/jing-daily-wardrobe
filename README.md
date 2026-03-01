@@ -33,3 +33,6 @@ npm install
 npm run dev
 ```
 
+## 项目上线
+ci-front-netlify
+
