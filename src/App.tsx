@@ -18,7 +18,6 @@ const App = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [suggestedOutfits, setSuggestedOutfits] = useState(ALL_OUTFITS);
   const [activeTab, setActiveTab] = useState<TabType>('recommend');
-
   const {
     matched,
     dragging,
