@@ -28,11 +28,7 @@ export const MatchZone: React.FC<MatchZoneProps> = ({
   return (
     <div className={block()}>
       <h3 className={block('title')}>穿搭搭配区</h3>
-      <p className={block('hint')}>
-        {typeof window !== 'undefined' && 'ontouchstart' in window
-          ? '点击衣服选择，再点击对应槽位放入'
-          : '拖拽或点击衣服到下方区域进行搭配'}
-      </p>
+      <p className={block('hint')}>点击衣服选择，再点击对应槽位放入</p>
       <div className={block('slots')}>
         {CATEGORIES.map((cat) => (
           <div

@@ -9,7 +9,6 @@ import camelWool from '../assets/images/allTrousers/camelWool.png';
 import whiteStrictBrushed from '../assets/images/allTrousers/whiteStrictBrushed.png';
 import camelBirkenstock from '../assets/images/allShoes/camelBirkenstock.png';
 import whiteSneaker from '../assets/images/allShoes/whiteSneaker.png';
-
 export interface Outfit {
   name: string;
   minTemp: number;

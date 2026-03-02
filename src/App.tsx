@@ -3,6 +3,12 @@ import axios from 'axios';
 import { genBlock } from './utils/bem';
 import { useDragDrop } from './hooks/useDragDrop';
 import { ALL_OUTFITS, CLOTHING_ITEMS, Outfit } from './constants/wardrobe';
+import { MatchZone } from './components/MatchZone';
+import { ClothingGrid } from './components/ClothingGrid';
+import './App.less';
+
+type TabType = 'recommend' | 'match';
+const DEFAULT_TEMP = 0;
 
 const getFilteredOutfits = (temp: number): Outfit[] => {
   const filtered = ALL_OUTFITS.filter(
@@ -12,19 +18,13 @@ const getFilteredOutfits = (temp: number): Outfit[] => {
     ? filtered
     : [{ name: '随便穿穿，心情最重要', minTemp: -100, maxTemp: 100 }];
 };
-import { MatchZone } from './components/MatchZone';
-import { ClothingGrid } from './components/ClothingGrid';
-import './App.less';
-
 const { block } = genBlock('wardrobe');
 
-type TabType = 'recommend' | 'match';
-
 const App = () => {
-  const [temp, setTemp] = useState<number>(5);
+  const [temp, setTemp] = useState<number>(DEFAULT_TEMP);
   const [weather, setWeather] = useState('阴');
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [suggestedOutfits, setSuggestedOutfits] = useState(() => getFilteredOutfits(5));
+  const [suggestedOutfits, setSuggestedOutfits] = useState(() => getFilteredOutfits(DEFAULT_TEMP));
   const [activeTab, setActiveTab] = useState<TabType>('recommend');
   const {
     matched,
@@ -91,7 +91,7 @@ const App = () => {
           </p>
           <hr />
           <p>为你推荐 今日穿搭：</p>
-          <p>静静你穿啥都好看</p>
+          <p>静静 你穿啥都好看!</p>
           <p className={block('outfit-name')}>
             {suggestedOutfits[safeIndex]?.name}
           </p>
