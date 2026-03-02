@@ -1,9 +1,10 @@
-import greenThickCoat from '../assets/images/winterCoat/greenThickCoat.jpg';
-import whiteFur from '../assets/images/winterCoat/whiteFur.jpg';
-import camelColorCoat from '../assets/images/autumnCoat/camelColorCoat.jpg';
-import brownColorCoat from '../assets/images/autumnCoat/brownColorCoat.jpg';
-import pinkFlowerSkirt from '../assets/images/summerSkirt/pinkFlowerSkirt.jpg';
-import creamQiaoAnNaSkirt from '../assets/images/summerSkirt/creamQiaoAnNaSkirt.jpg';
+import greenThickCoat from '../assets/images/winterCoats/greenThickCoat.jpg';
+import whiteFur from '../assets/images/winterCoats/whiteFur.jpg';
+import blackCashmereCoat from '../assets/images/winterCoats/blackCashmereCoat.jpg';
+import camelCashmereCoat from '../assets/images/autumnCoats/camelCashmereCoat.jpg';
+import brownCashmereCoat from '../assets/images/autumnCoats/brownCashmereCoat.jpg';
+import pinkFlowerSkirt from '../assets/images/summerSkirts/pinkFlowerSkirt.jpg';
+import creamQiaoAnNaSkirt from '../assets/images/summerSkirts/creamQiaoAnNaSkirt.jpg';
 import camelWool from '../assets/images/allTrousers/camelWool.png';
 import whiteStrictBrushed from '../assets/images/allTrousers/whiteStrictBrushed.png';
 import camelBirkenstock from '../assets/images/allShoes/camelBirkenstock.png';
@@ -26,17 +27,19 @@ export interface ClothingItem {
 export const ALL_OUTFITS: Outfit[] = [
   { name: '绿色无帽厚羽绒服', minTemp: -15, maxTemp: -5, imageUrl: greenThickCoat },
   { name: '白色无帽厚皮草', minTemp: -15, maxTemp: -5, imageUrl: whiteFur },
-  { name: '棕色羊绒大衣', minTemp: -4, maxTemp: 3, imageUrl: brownColorCoat },
-  { name: '驼色羊绒大衣', minTemp: 4, maxTemp: 12, imageUrl: camelColorCoat },
-  { name: '嫩粉色碎花真丝长裙', minTemp: 25, maxTemp: 35, imageUrl: pinkFlowerSkirt },
-  { name: '米色乔安娜长裙', minTemp: 25, maxTemp: 35, imageUrl: creamQiaoAnNaSkirt },
+  { name: '黑色羊绒大衣', minTemp: -4, maxTemp: 8, imageUrl: blackCashmereCoat },
+  { name: '棕色羊绒大衣', minTemp: 3, maxTemp: 15, imageUrl: brownCashmereCoat },
+  { name: '驼色羊绒大衣', minTemp: 8, maxTemp: 20, imageUrl: camelCashmereCoat },
+  { name: '嫩粉色碎花真丝长裙', minTemp: 25, maxTemp: 37, imageUrl: pinkFlowerSkirt },
+  { name: '米色乔安娜长裙', minTemp: 25, maxTemp: 37, imageUrl: creamQiaoAnNaSkirt },
 ];
 
 export const CLOTHING_ITEMS: ClothingItem[] = [
   { id: 'coat-1', name: '绿色厚羽绒服', imageUrl: greenThickCoat, category: 'coat' },
   { id: 'coat-2', name: '白色皮草', imageUrl: whiteFur, category: 'coat' },
-  { id: 'coat-3', name: '棕色羊绒大衣', imageUrl: brownColorCoat, category: 'coat' },
-  { id: 'coat-4', name: '驼色羊绒大衣', imageUrl: camelColorCoat, category: 'coat' },
+  { id: 'coat-3', name: '黑色羊绒大衣', imageUrl: blackCashmereCoat, category: 'coat' },
+  { id: 'coat-4', name: '棕色羊绒大衣', imageUrl: brownCashmereCoat, category: 'coat' },
+  { id: 'coat-5', name: '驼色羊绒大衣', imageUrl: camelCashmereCoat, category: 'coat' },
   { id: 'skirt-1', name: '嫩粉色碎花长裙', imageUrl: pinkFlowerSkirt, category: 'skirt' },
   { id: 'skirt-2', name: '米色乔安娜长裙', imageUrl: creamQiaoAnNaSkirt, category: 'skirt' },
   { id: 'trousers-1', name: '驼色羊毛裤', imageUrl: camelWool, category: 'trousers' },

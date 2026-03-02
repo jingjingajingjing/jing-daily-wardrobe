@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { genBlock } from './utils/bem';
-import { useSwipe } from './hooks/useSwipe';
 import { useDragDrop } from './hooks/useDragDrop';
 import { ALL_OUTFITS, CLOTHING_ITEMS, Outfit } from './constants/wardrobe';
 
@@ -42,14 +41,15 @@ const App = () => {
   const safeIndex =
     suggestedOutfits.length > 0 ? currentIndex % suggestedOutfits.length : 0;
   const goPrev = () =>
-    setCurrentIndex((i) => (i - 1 + suggestedOutfits.length) % suggestedOutfits.length);
+    setCurrentIndex((i) => Math.max(0, i - 1));
   const goNext = () =>
-    setCurrentIndex((i) => (i + 1) % suggestedOutfits.length);
+    setCurrentIndex((i) => Math.min(suggestedOutfits.length - 1, i + 1));
+  // 换一套看看：独立于箭头，可无限循环浏览
+  const cycleNext = () =>
+    setCurrentIndex((i) => (i + 1) % Math.max(1, suggestedOutfits.length));
 
-  const swipe = useSwipe({
-    onSwipeLeft: goNext,
-    onSwipeRight: goPrev,
-  });
+  const canGoPrev = safeIndex > 0;
+  const canGoNext = safeIndex < suggestedOutfits.length - 1;
 
   useEffect(() => {
     axios
@@ -96,21 +96,38 @@ const App = () => {
           <p className={block('outfit-name')}>
             {suggestedOutfits[safeIndex]?.name}
           </p>
-          <div
-            className={block('image-wrapper')}
-            onTouchStart={swipe.handleTouchStart}
-            onTouchEnd={swipe.handleTouchEnd}
-          >
-            <img
-              className={block('image')}
-              src={suggestedOutfits[safeIndex]?.imageUrl}
-              alt={suggestedOutfits[safeIndex]?.name}
-            />
+          <div className={block('carousel')}>
+            {canGoPrev && (
+              <button
+                type="button"
+                className={`${block('arrow-btn')} ${block('arrow-btn', 'left')}`}
+                onClick={goPrev}
+                aria-label="上一套"
+              >
+                ←
+              </button>
+            )}
+            <div className={block('image-wrapper')}>
+              <img
+                className={block('image')}
+                src={suggestedOutfits[safeIndex]?.imageUrl}
+                alt={suggestedOutfits[safeIndex]?.name}
+              />
+            </div>
+            {canGoNext && (
+              <button
+                type="button"
+                className={`${block('arrow-btn')} ${block('arrow-btn', 'right')}`}
+                onClick={goNext}
+                aria-label="下一套"
+              >
+                →
+              </button>
+            )}
           </div>
-          <p className={block('swipe-hint')}>👆 左右滑动可切换</p>
           <button
             className={block('switch-btn')}
-            onClick={goNext}
+            onClick={cycleNext}
           >
             换一套看看
           </button>
