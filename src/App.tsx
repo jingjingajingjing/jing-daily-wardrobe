@@ -91,7 +91,6 @@ const App = () => {
           </p>
           <hr />
           <p>为你推荐 今日穿搭：</p>
-          <p>今天心情怎么样呀!</p>
           <p>静静你穿啥都好看</p>
           <p className={block('outfit-name')}>
             {suggestedOutfits[safeIndex]?.name}
