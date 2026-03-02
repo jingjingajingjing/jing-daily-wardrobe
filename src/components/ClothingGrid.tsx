@@ -7,6 +7,9 @@ import './ClothingGrid.less';
 
 const { block } = genBlock('clothing-grid');
 
+// 移动距离超过此阈值视为滑动，不触发选中
+const TAP_THRESHOLD = 10;
+
 interface ClothingGridProps {
   items: ClothingItem[];
   onDragStart: (e: React.DragEvent, item: DraggedItem) => void;
@@ -22,6 +25,7 @@ export const ClothingGrid: React.FC<ClothingGridProps> = ({
   onSelectItem,
   dragging,
 }) => {
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const touchHandledRef = useRef(false);
 
   const byCategory = items.reduce<Record<string, ClothingItem[]>>((acc, item) => {
@@ -53,17 +57,40 @@ export const ClothingGrid: React.FC<ClothingGridProps> = ({
                       })
                     }
                     onDragEnd={onDragEnd}
+                    onTouchStart={(e) => {
+                      touchStartRef.current = {
+                        x: e.touches[0].clientX,
+                        y: e.touches[0].clientY,
+                      };
+                    }}
                     onTouchEnd={(e) => {
                       touchHandledRef.current = true;
-                      e.preventDefault();
-                      onSelectItem({ id: item.id, name: item.name, imageUrl: item.imageUrl, category: item.category });
+                      const start = touchStartRef.current;
+                      touchStartRef.current = null;
+                      if (!start) return;
+                      const deltaX = Math.abs(e.changedTouches[0].clientX - start.x);
+                      const deltaY = Math.abs(e.changedTouches[0].clientY - start.y);
+                      // 水平或垂直移动超过阈值视为滑动，不触发选中
+                      if (deltaX > TAP_THRESHOLD || deltaY > TAP_THRESHOLD) return;
+                      const dragged: DraggedItem = {
+                        id: item.id,
+                        name: item.name,
+                        imageUrl: item.imageUrl,
+                        category: item.category,
+                      };
+                      onSelectItem(dragged);
                     }}
                     onClick={() => {
                       if (touchHandledRef.current) {
                         touchHandledRef.current = false;
                         return;
                       }
-                      onSelectItem({ id: item.id, name: item.name, imageUrl: item.imageUrl, category: item.category });
+                      onSelectItem({
+                        id: item.id,
+                        name: item.name,
+                        imageUrl: item.imageUrl,
+                        category: item.category,
+                      });
                     }}
                   >
                     <img src={item.imageUrl} alt={item.name} />
