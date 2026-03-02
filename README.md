@@ -4,7 +4,7 @@
 
 ## 在线预览
 
-[https://jing-daily-wardrobe.netlify.app/](https://jing-daily-wardrobe.netlify.app/)
+[https://jing-daily-vibe.netlify.app/](https://jing-daily-vibe.netlify.app/)
 
 ## 功能需求
 
