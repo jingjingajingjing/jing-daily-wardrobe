@@ -26,6 +26,7 @@ const App = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [suggestedOutfits, setSuggestedOutfits] = useState(() => getFilteredOutfits(DEFAULT_TEMP));
   const [activeTab, setActiveTab] = useState<TabType>('recommend');
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const {
     matched,
     dragging,
@@ -45,8 +46,14 @@ const App = () => {
   const goNext = () =>
     setCurrentIndex((i) => Math.min(suggestedOutfits.length - 1, i + 1));
   // 换一套看看：独立于箭头，可无限循环浏览
-  const cycleNext = () =>
-    setCurrentIndex((i) => (i + 1) % Math.max(1, suggestedOutfits.length));
+  const cycleNext = () => {
+    if (suggestedOutfits.length <= 1) {
+      setToastMessage('目前只有这一套衣服推荐');
+      setTimeout(() => setToastMessage(null), 2000);
+      return;
+    }
+    setCurrentIndex((i) => (i + 1) % suggestedOutfits.length);
+  };
 
   const canGoPrev = safeIndex > 0;
   const canGoNext = safeIndex < suggestedOutfits.length - 1;
@@ -68,6 +75,11 @@ const App = () => {
 
   return (
     <div className={block()}>
+      {toastMessage && (
+        <div className={block('toast')} role="alert">
+          {toastMessage}
+        </div>
+      )}
       <div className={block('tabs')}>
         <button
           className={`${block('tab')} ${activeTab === 'recommend' ? block('tab', 'active') : ''}`}
