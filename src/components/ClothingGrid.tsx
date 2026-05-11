@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { memo, useMemo, useRef } from 'react';
 import { genBlock } from '../utils/bem';
 import type { ClothingItem } from '../constants/wardrobe';
 import type { DraggedItem } from '../hooks/useDragDrop';
@@ -9,6 +9,7 @@ const { block } = genBlock('clothing-grid');
 
 // 移动距离超过此阈值视为滑动，不触发选中
 const TAP_THRESHOLD = 10;
+const CATEGORY_ORDER = ['coat', 'trousers', 'skirt', 'shoes'] as const;
 
 interface ClothingGridProps {
   items: ClothingItem[];
@@ -18,36 +19,44 @@ interface ClothingGridProps {
   dragging: DraggedItem | null;
 }
 
-export const ClothingGrid: React.FC<ClothingGridProps> = ({
+export const ClothingGrid = memo(function ClothingGrid({
   items,
   onDragStart,
   onDragEnd,
   onSelectItem,
   dragging,
-}) => {
+}: ClothingGridProps) {
   const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const touchHandledRef = useRef(false);
 
-  const byCategory = items.reduce<Record<string, ClothingItem[]>>((acc, item) => {
-    if (!acc[item.category]) acc[item.category] = [];
-    acc[item.category].push(item);
-    return acc;
-  }, {});
+  const byCategory = useMemo(
+    () =>
+      items.reduce<Record<string, ClothingItem[]>>((acc, item) => {
+        if (!acc[item.category]) acc[item.category] = [];
+        acc[item.category].push(item);
+        return acc;
+      }, {}),
+    [items]
+  );
 
   return (
-    <div className={block()}>
+    <section className={block()} aria-label="我的衣柜">
       <h3 className={block('title')}>我的衣柜</h3>
-      {(['coat', 'trousers', 'skirt', 'shoes'] as const).map(
+      {CATEGORY_ORDER.map(
         (cat) =>
           byCategory[cat]?.length > 0 && (
             <div key={cat} className={block('category')}>
-              <span className={block('category-label')}>{CATEGORY_LABELS[cat]}</span>
+              <span className={block('category-label')}>
+                {CATEGORY_LABELS[cat]}
+              </span>
               <div className={block('list')}>
                 {byCategory[cat].map((item) => (
-                  <div
+                  <button
+                    type="button"
                     key={item.id}
                     className={`${block('item')} ${dragging?.id === item.id ? block('item', 'dragging') : ''}`}
                     draggable
+                    aria-pressed={dragging?.id === item.id}
                     onDragStart={(e) =>
                       onDragStart(e, {
                         id: item.id,
@@ -68,10 +77,15 @@ export const ClothingGrid: React.FC<ClothingGridProps> = ({
                       const start = touchStartRef.current;
                       touchStartRef.current = null;
                       if (!start) return;
-                      const deltaX = Math.abs(e.changedTouches[0].clientX - start.x);
-                      const deltaY = Math.abs(e.changedTouches[0].clientY - start.y);
+                      const deltaX = Math.abs(
+                        e.changedTouches[0].clientX - start.x
+                      );
+                      const deltaY = Math.abs(
+                        e.changedTouches[0].clientY - start.y
+                      );
                       // 水平或垂直移动超过阈值视为滑动，不触发选中
-                      if (deltaX > TAP_THRESHOLD || deltaY > TAP_THRESHOLD) return;
+                      if (deltaX > TAP_THRESHOLD || deltaY > TAP_THRESHOLD)
+                        return;
                       const dragged: DraggedItem = {
                         id: item.id,
                         name: item.name,
@@ -93,14 +107,14 @@ export const ClothingGrid: React.FC<ClothingGridProps> = ({
                       });
                     }}
                   >
-                    <img src={item.imageUrl} alt={item.name} />
+                    <img src={item.imageUrl} alt="" aria-hidden="true" />
                     <span>{item.name}</span>
-                  </div>
+                  </button>
                 ))}
               </div>
             </div>
           )
       )}
-    </div>
+    </section>
   );
-};
+});

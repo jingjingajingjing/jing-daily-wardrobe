@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { genBlock } from '../utils/bem';
 import type { DraggedItem } from '../hooks/useDragDrop';
 import { CATEGORY_LABELS } from '../constants/wardrobe';
@@ -17,53 +17,72 @@ interface MatchZoneProps {
 
 const CATEGORIES = ['coat', 'trousers', 'skirt', 'shoes'] as const;
 
-export const MatchZone: React.FC<MatchZoneProps> = ({
+export const MatchZone = memo(function MatchZone({
   matched,
   onDrop,
   onDragOver,
   onSlotTap,
   onClear,
   dragging,
-}) => {
+}: MatchZoneProps) {
   return (
-    <div className={block()}>
+    <section className={block()} aria-label="穿搭搭配区">
       <h3 className={block('title')}>穿搭搭配区</h3>
-      <p className={block('hint')}>点击衣服选择，再点击对应槽位放入</p>
       <div className={block('slots')}>
         {CATEGORIES.map((cat) => (
           <div
             key={cat}
-            className={`${block('slot')} ${matched[cat] ? block('slot', 'filled') : ''}`}
+            className={`${block('slot')} ${matched[cat] ? block('slot', 'filled') : ''} ${
+              dragging?.category === cat ? block('slot', 'ready') : ''
+            }`}
+            role={matched[cat] ? undefined : 'button'}
+            tabIndex={matched[cat] ? undefined : 0}
+            aria-label={
+              matched[cat] ? undefined : `${CATEGORY_LABELS[cat]}搭配槽`
+            }
             onDrop={(e) => onDrop(e, cat)}
             onDragOver={onDragOver}
             onTouchEnd={(e) => {
               if ((e.target as HTMLElement).closest('button')) return;
               e.preventDefault();
+              if (matched[cat]) return;
               onSlotTap(cat);
             }}
-            onClick={() => onSlotTap(cat)}
+            onClick={() => {
+              if (!matched[cat]) onSlotTap(cat);
+            }}
+            onKeyDown={(e) => {
+              if (matched[cat]) return;
+              if (e.key !== 'Enter' && e.key !== ' ') return;
+              e.preventDefault();
+              onSlotTap(cat);
+            }}
           >
             <span className={block('slot-label')}>{CATEGORY_LABELS[cat]}</span>
             {matched[cat] ? (
               <div className={block('slot-content')}>
-                <img src={matched[cat].imageUrl} alt={matched[cat].name} />
+                <img src={matched[cat].imageUrl} alt="" aria-hidden="true" />
                 <span>{matched[cat].name}</span>
                 <button
                   type="button"
                   className={block('slot-clear')}
-                  onClick={() => onClear(cat)}
+                  aria-label={`移除${matched[cat].name}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onClear(cat);
+                  }}
                 >
                   移除
                 </button>
               </div>
             ) : (
               <span className={block('slot-placeholder')}>
-                {dragging?.category === cat ? '松手放入' : '拖到此处'}
+                {dragging?.category === cat ? '可放入' : '待搭配'}
               </span>
             )}
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
-};
+});
